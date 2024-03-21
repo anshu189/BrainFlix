@@ -49,43 +49,68 @@ const VideoDetails = () => {
         setSelectedVideo(videoDetails);
     };
 
+
+    // Function to format timestamp into "MM/DD/YYYY" format
+    const formatDate = (timestamp) => {
+        const date = new Date(timestamp);
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        return `${month}/${day}/${year}`;
+    };
+
+    // Convert timestamps in comments to desired format
+    const formattedComments = selectedVideo.comments.map(comment => ({
+        ...comment,
+        timestamp: formatDate(comment.timestamp)
+    }));
+
+    // Convert timestamp of the main video to desired format
+    const formattedVideo = {
+        ...selectedVideo,
+        timestamp: formatDate(selectedVideo.timestamp),
+        comments: formattedComments
+    };
+
+    console.log(formattedVideo)
+
     return (
         <div className='w-[100%]'>
-            {selectedVideo && (<>
-            <div className='bg-black h-[60vh] relative flex items-center justify-center overflow-hidden'>
-                <img src={selectedVideo.image} alt="" className='bg-cover h-full w-[50%]'/>
+            {formattedVideo && (<>
+            <div className='bg-black h-[65vh] relative flex items-center justify-center overflow-hidden'>
+                <img src={formattedVideo.image} alt="" className='bg-cover h-full w-[50%]'/>
             </div>
             <div className="flex justify-center">
                 <div className='w-[65%] flex justify-end'>
                     <div className="w-[90%] py-10 flex flex-col items-start justify-start gap-6">
-                        <div className='text-4xl font-bold'>{selectedVideo.title}</div>
+                        <div className='text-4xl font-bold'>{formattedVideo.title}</div>
                         <div className='w-full flex justify-between items-center'>
                            <div className='w-full flex text-sm gap-8 items-center'>
-                                <div className='font-bold'>By {selectedVideo.channel}</div> 
-                                <div>{selectedVideo.timestamp}</div> 
+                                <div className='font-bold'>By {formattedVideo.channel}</div> 
+                                <div className='text-[#999999]'>{formattedVideo.timestamp}</div> 
                             </div>
                             <div className='w-full flex gap-4 items-center justify-end px-6'>
                                 <div className='flex gap-4'>
                                     <img src={viewsicon} alt="Total Views" className='w-6'/>
-                                    <div>{selectedVideo.views}</div>
+                                    <div>{formattedVideo.views}</div>
                                 </div> 
                                 <div className='flex gap-4'>
                                     <img src={likesicon} alt="Total Likes"  className='w-6'/>
-                                    <div>{selectedVideo.likes}</div>
+                                    <div>{formattedVideo.likes}</div>
                                 </div> 
                             </div>
                         </div>
                         <div className='w-full h-[1px] bg-black border-[1px] border-[#dddddd]'></div>
                         <div className='pr-6'>
-                            {selectedVideo.description}
+                            {formattedVideo.description}
                         </div>
                         
                         <div className="w-full flex flex-col items-start justify-center gap-4">
-                            <div className='font-bold'>{selectedVideo.comments.length} Comments</div>
+                            <div className='font-bold'>{formattedVideo.comments.length} Comments</div>
                             <div className="w-full flex items-end justify-center gap-10 pb-6">
                                 <a href='/' ><img src={pfpicon} alt="" className='w-12 shadow-[inset_0_0_8px_0_rgba(0,0,0,0.2)] h-12 border-none outline-none cursor-pointer rounded-full'/></a>
                                 <div className="w-[60%] flex flex-col items-start gap-2">
-                                    <div className='text-[#dddddd]'>JOIN THE CONVERSATION</div>
+                                    <div className='text-[#999999]'>JOIN THE CONVERSATION</div>
                                     <input type="text" placeholder='Add a new comment' className='w-full py-[10px] outline-none px-4 border-[1px] border-[#dddddd] rounded-md'/>
                                 </div>
                                 <div className='flex items-center relative'>
@@ -93,13 +118,13 @@ const VideoDetails = () => {
                                     <a href='/' className='w-[100%] py-[10px] px-12 bg-[#0095FF] text-white border-none cursor-pointer duration-500 hover:shadow-[0_5px_10px_0_rgba(0,0,0,0.15)] outline-none border-[1px] border-[#999999] rounded-md'>COMMENT</a>
                                 </div>
                             </div>
-                        {selectedVideo.comments.map((items)=>(
+                        {formattedVideo.comments.map((items)=>(
                             <div className="w-full flex items-center justify-center gap-10 py-4 border-t-[1px] border-[#dddddd]">
                                 <a href='/' ><img src={commentpfpicon} alt="" className='w-12 shadow-[inset_0_0_8px_0_rgba(0,0,0,0.2)] h-12 border-none outline-none cursor-pointer rounded-full'/></a>
                                 <div className="w-[85%] flex flex-col items-start gap-2">
                                     <div className="w-full flex items-center justify-between">
                                         <div className='font-bold'>{items.name}</div>
-                                        <div className='text-sm text-[#dddddd]'>{items.timestamp}</div>
+                                        <div className='text-sm text-[#999999]'>{items.timestamp}</div>
                                     </div>
                                     <div>{items.comment}</div>
                                 </div>
