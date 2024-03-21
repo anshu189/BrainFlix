@@ -72,8 +72,6 @@ const VideoDetails = () => {
         comments: formattedComments
     };
 
-    console.log(formattedVideo)
-
     return (
         <div className='w-[100%]'>
             {formattedVideo && (<>
