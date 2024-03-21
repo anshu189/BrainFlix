@@ -8,6 +8,12 @@ import commenticon from '../assets/comment.svg'
 import commentpfpicon from '../assets/commentpfp.svg' 
 
 const VideoDetails = () => {
+
+    var updatedLocalVideoData = videosData;
+    updatedLocalVideoData = updatedLocalVideoData.filter(
+      (video) => video.id !== "84e96018-4022-434e-80bf-000ce4cd12b8"
+    );
+    const [LocalVideoData, setLocalVideoData] = useState(updatedLocalVideoData);
     const [selectedVideo, setSelectedVideo] = useState({
         "id": "84e96018-4022-434e-80bf-000ce4cd12b8",
         "title": "BMX Rampage: 2021 Highlights",
@@ -44,11 +50,17 @@ const VideoDetails = () => {
         ]
       });
 
-    const handleVideoSelect = (videoId) => {
-        const videoDetails = videosDetailsData.find(video => video.id === videoId);
+      const handleVideoSelect = (videoId) => {
+        const videoDetails = videosDetailsData.find(
+          (video) => video.id === videoId
+        );
+        updatedLocalVideoData = videosData;
+        updatedLocalVideoData = updatedLocalVideoData.filter(
+          (video) => video.id !== videoId
+        );
+        setLocalVideoData(updatedLocalVideoData);
         setSelectedVideo(videoDetails);
-    };
-
+        };
 
     // Function to format timestamp into "MM/DD/YYYY" format
     const formatDate = (timestamp) => {
@@ -75,19 +87,19 @@ const VideoDetails = () => {
     return (
         <div className='w-[100%]'>
             {formattedVideo && (<>
-            <div className='bg-black h-[65vh] relative flex items-center justify-center overflow-hidden'>
-                <img src={formattedVideo.image} alt="" className='bg-cover h-full w-[50%]'/>
+            <div className='md:max-xl:h-[30vh]  max-sm:h-[25vh] bg-black h-[65vh] relative flex items-center justify-center overflow-hidden'>
+                <img src={formattedVideo.image} alt="" className='max-sm:w-[100%] bg-cover h-full w-[50%]'/>
             </div>
-            <div className="flex justify-center">
-                <div className='w-[65%] flex justify-end'>
+            <div className="md:max-xl:flex-col max-sm:flex-col flex justify-center">
+                <div className='md:max-xl:justify-center md:max-xl:w-full max-sm:justify-center max-sm:w-full w-[65%] flex justify-end'>
                     <div className="w-[90%] py-10 flex flex-col items-start justify-start gap-6">
                         <div className='text-4xl font-bold'>{formattedVideo.title}</div>
                         <div className='w-full flex justify-between items-center'>
-                           <div className='w-full flex text-sm gap-8 items-center'>
+                           <div className='max-sm:flex-col max-sm:items-start max-sm:gap-4 w-full flex text-sm gap-8 items-center'>
                                 <div className='font-bold'>By {formattedVideo.channel}</div> 
                                 <div className='text-[#999999]'>{formattedVideo.timestamp}</div> 
                             </div>
-                            <div className='w-full flex gap-4 items-center justify-end px-6'>
+                            <div className='max-sm:flex-col max-sm:items-start max-sm:gap-4 w-full flex gap-4 items-center justify-end px-6'>
                                 <div className='flex gap-4'>
                                     <img src={viewsicon} alt="Total Views" className='w-6'/>
                                     <div>{formattedVideo.views}</div>
@@ -105,42 +117,48 @@ const VideoDetails = () => {
                         
                         <div className="w-full flex flex-col items-start justify-center gap-4">
                             <div className='font-bold'>{formattedVideo.comments.length} Comments</div>
-                            <div className="w-full flex items-end justify-center gap-10 pb-6">
+                            
+                            <div className="max-sm:gap-6 max-sm:items-start w-full flex items-end justify-center gap-10 pb-6">
                                 <a href='/' ><img src={pfpicon} alt="" className='w-12 shadow-[inset_0_0_8px_0_rgba(0,0,0,0.2)] h-12 border-none outline-none cursor-pointer rounded-full'/></a>
-                                <div className="w-[60%] flex flex-col items-start gap-2">
+                                <div className="max-sm:w-[90%] w-[60%] flex flex-col items-start gap-2">
                                     <div className='text-[#999999]'>JOIN THE CONVERSATION</div>
                                     <input type="text" placeholder='Add a new comment' className='w-full py-[10px] outline-none px-4 border-[1px] border-[#dddddd] rounded-md'/>
+                                    <div className='max-sm:mt-4 max-sm:w-full max-sm:block hidden flex items-center relative'>
+                                        <img src={commenticon} alt="" className='w-4 absolute ml-4'/>
+                                        <a href='/' className='w-[100%] max-sm:w-full py-[10px] px-12 bg-[#0095FF] text-white border-none cursor-pointer duration-500 hover:shadow-[0_5px_10px_0_rgba(0,0,0,0.15)] outline-none border-[1px] border-[#999999] rounded-md'>COMMENT</a>
+                                    </div>
                                 </div>
-                                <div className='flex items-center relative'>
+                                <div className='max-sm:hidden flex items-center relative'>
                                     <img src={commenticon} alt="" className='w-4 absolute ml-4'/>
                                     <a href='/' className='w-[100%] py-[10px] px-12 bg-[#0095FF] text-white border-none cursor-pointer duration-500 hover:shadow-[0_5px_10px_0_rgba(0,0,0,0.15)] outline-none border-[1px] border-[#999999] rounded-md'>COMMENT</a>
                                 </div>
                             </div>
-                        {formattedVideo.comments.map((items)=>(
-                            <div className="w-full flex items-center justify-center gap-10 py-4 border-t-[1px] border-[#dddddd]">
-                                <a href='/' ><img src={commentpfpicon} alt="" className='w-12 shadow-[inset_0_0_8px_0_rgba(0,0,0,0.2)] h-12 border-none outline-none cursor-pointer rounded-full'/></a>
-                                <div className="w-[85%] flex flex-col items-start gap-2">
-                                    <div className="w-full flex items-center justify-between">
-                                        <div className='font-bold'>{items.name}</div>
-                                        <div className='text-sm text-[#999999]'>{items.timestamp}</div>
+
+                            {formattedVideo.comments.map((items)=>(
+                                <div className="w-full flex items-center justify-center gap-10 py-4 border-t-[1px] border-[#dddddd]">
+                                    <a href='/' ><img src={commentpfpicon} alt="" className='w-12 shadow-[inset_0_0_8px_0_rgba(0,0,0,0.2)] h-12 border-none outline-none cursor-pointer rounded-full'/></a>
+                                    <div className="w-[85%] flex flex-col items-start gap-2">
+                                        <div className="w-full flex items-center justify-between">
+                                            <div className='font-bold'>{items.name}</div>
+                                            <div className='text-sm text-[#999999]'>{items.timestamp}</div>
+                                        </div>
+                                        <div>{items.comment}</div>
                                     </div>
-                                    <div>{items.comment}</div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
                         </div>  
                     </div>
                 </div>
                 
-                <div className="w-[30%] flex flex-col gap-8 py-8 pl-8 border-l-[1px] border-[#dddddd]">
+                <div className="md:max-xl:w-full max-sm:w-full max-sm:border-t-[1px] border-[#dddddd] w-[30%] flex flex-col gap-8 py-8 pl-8 border-l-[1px] border-[#dddddd]">
                     <div className='uppercase text-[#999999]'>Next Videos</div>
-                    {videosData.map(video => (
+                    {LocalVideoData.map(video => (
                         <div key={video.id} className="flex items-center gap-6 video-card cursor-pointer" onClick={() => handleVideoSelect(video.id)}>
                             <div className='w-[150px]'>
-                                <img src={video.image} alt={video.title} className='h-[12vh] w-[100%] bg-auto rounded-md'/>
+                                <img src={video.image} alt={video.title} className='md:max-xl:h-[8vh] h-[12vh] w-[100%] bg-auto rounded-md'/>
                             </div>
                             <div className="w-[50%] flex flex-col h-full justify-center gap-4 items-start">
-                                <h3 className='w-[80%] text-md font-medium leading-tight'>{video.title}</h3>
+                                <h3 className='md:max-xl:w-[40%] w-[80%] text-md font-medium leading-tight'>{video.title}</h3>
                                 <p>{video.channel}</p>
                             </div>
                         </div>
